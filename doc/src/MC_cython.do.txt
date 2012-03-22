@@ -244,7 +244,7 @@ Terminal> cython -a dice6.pyx
 creates a file `dice6.html` which can be loaded into a web browser
 to inspect what Cython has done with the Python code.
 
-FIGURE:[figs-MC_cython/dice61_html.png, width=450]
+FIGURE:[figs-MC_cython/dice6_html.png, width=550]
 
 White lines indicate that the Python code is translated into C code, while
 the yellow lines indicate that the generated C code must make calls
