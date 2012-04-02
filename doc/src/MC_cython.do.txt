@@ -36,7 +36,7 @@ high-level languages like Python, which are known be "slow" compared
 to compiled languages, are for Monte Carlo simulation.
 
 
-===== Solution 1: A Scalar Python Implementation ======
+===== A Scalar Python Implementation ======
 
 Let us introduce the more descriptive variable `ndice` for $m$
 and `nsix` for $n$. The Monte Carlo method is
@@ -67,7 +67,7 @@ The table to appear later shows the performance of this plain, pure Python
 code relative to other approaches. There is a factor of 50+ to be
 gained in computational efficiency by reading on.
 
-The function above can be verified by styding the (somewhat simplified) case
+The function above can be verified by studying the (somewhat simplified) case
 where $m=n$ where the probability becomes $6^{-m}$. The probability
 quickly becomes small with increasing number of dice.
 For such small probabilities
@@ -95,7 +95,7 @@ of 10 in computing resources as the CPU time scales linearly with $N$.
 #5 dice, N=10^6, mean=0.00013, stdev=9.85e-06, exact=0.00013, time=12.8 s
 
 
-===== Solution 2: A Vectorized Python Implementation ======
+===== A Vectorized Python Implementation ======
 
 A vectorized version of the previous program consists of replacing the
 explicit loops in Python by efficient operations on vectors or arrays.
@@ -149,14 +149,14 @@ only each individual experiment:
 @@@CODE src-MC_cython/dice6.py fromto: def dice6_vec2@try:
 
 We refer to this implementation as *vectorized Python, version 2*.  As
-will be shown later, this implementation is signficantly slower than
+will be shown later, this implementation is significantly slower than
 the *plain Python* implementation (!) and very much slower than the
 *vectorized Python, version 1* approach.  A conclusion is that
 readable, partially vectorized code, may run slower than
 straightforward scalar code.
 
 
-===== Solution 3: A Plain Cython Implementation ======
+===== A Plain Cython Implementation ======
 
 A Cython program starts with the Python implementation, but
 all variables are specified with their types, using the Cython
@@ -253,7 +253,7 @@ the `random.randint` call is in yellow, so this call is
 not translated to efficient C code but performed by
 calling a Python function.
 
-===== Solution 4: A Better Cython Implementation ======
+===== A Better Cython Implementation ======
 
 To speed up the previous Cython code, we have to get rid of the
 `random.randint` call every time we need a random variable.
@@ -307,7 +307,7 @@ looks as follows:
 
 This version is named *Cython numpy.random*.
 
-===== Solution 5: Writing a C Program ======
+===== Writing a C Program ======
 
 A natural next improvement would be to program the Monte Carlo
 simulation loops directly in a compiled programming language, which
@@ -326,7 +326,7 @@ Terminal> ./dice6.capp 1000000
 !ec
 This solution is later referred to as *C program*.
 
-===== Solution 6: Migrating Loops to C Code via F2PY ======
+===== Migrating Loops to C Code via F2PY ======
 
 Instead of programming the whole application in C, we may consider
 migrating the loops to the C function `dice6` shown above
@@ -392,7 +392,7 @@ Return objects:
 The method of calling the C function `dice6` via an `f2py`
 generated module is referred to as *C via f2py*.
 
-===== Solution 7: Migrating Loops to C Code via Cython ======
+===== Migrating Loops to C Code via Cython ======
 
 The Cython tool can also be used to call C code, not only generating
 C code from the Cython language.
