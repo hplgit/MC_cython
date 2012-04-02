@@ -1,2 +1,2 @@
 #!/bin/sh
-rm -rf *.html *.tex sphinx_rootdir *.rst
+rm -rf *.html *.tex sphinx_rootdir *.rst *~ tmp*
