@@ -5,8 +5,7 @@ def run_experiments(N, ndice, nsix):
     from dice6 import dice6_py, dice6_vec1, dice6_vec2
     # Try to import compiled versions
     try:
-        from _dice6_cy import \
-             dice61 as dice6_cy1, dice62 as dice6_cy2
+        from _dice6_cy import dice6_cy1, dice6_cy2, dice6_cy3
         from _dice6_c1 import dice6 as dice6_c_f2py
         from _dice6_c2 import dice6_cwrap as dice6_c_cy
     except ImportError:
@@ -22,6 +21,12 @@ def run_experiments(N, ndice, nsix):
     t1 = time.clock()
     timings['Cython numpy.random'] = t1-t0
     print '\n\nLoops in Cython with numpy.random: ', t1-t0, p
+
+    t0 = time.clock()
+    p = dice6_cy3(N, ndice, nsix)
+    t1 = time.clock()
+    timings['Cython stdlib.rand'] = t1-t0
+    print '\n\nLoops in Cython with stdlib.rand: ', t1-t0, p
 
     t0 = time.clock()
     p = dice6_c_f2py(N, ndice, nsix)
@@ -92,7 +97,18 @@ Python, vectorized v2: 131.42
 Python, plain: 46.81
 C via Cython: 1.57
 
-Numbers change a lot from experiment to experiment.
+N=450,000
+Cython numpy.random: 1.22
+Cython random.randint: 33.65
+C via f2py: 2.08
+C program: 1.00
+Python, vectorized v1: 1.92
+Python, vectorized v2: 105.26
+Python, plain: 37.70
+Cython stdlib.rand: 1.17
+C via Cython: 1.28
+
+Numbers change *a lot* from experiment to experiment.
 """
 
 if __name__ == '__main__':

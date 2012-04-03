@@ -10,7 +10,7 @@ double dice6(int N, int ndice, int nsix)
   for (i = 0; i < N; i++) {
     six = 0;
     for (j = 0; j < ndice; j++) {
-      r = 1 + ((double) rand())/RAND_MAX*6; /* roll die no. j */
+      r = 1 + rand()/(RAND_MAX*6.0); /* roll die no. j */
       if (r == 6)
 	six += 1;
     }

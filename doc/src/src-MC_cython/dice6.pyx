@@ -1,7 +1,7 @@
 # cython: profile=True
 import random
 
-def dice61(int N, int ndice, int nsix):
+def dice6_cy1(int N, int ndice, int nsix):
     cdef int M = 0            # no of successful events
     cdef int six, r
     cdef double p
@@ -21,7 +21,7 @@ import  numpy as np
 cimport numpy as np
 import cython
 @cython.boundscheck(False)
-def dice62(int N, int ndice, int nsix):
+def dice6_cy2(int N, int ndice, int nsix):
     # Use numpy to generate all random numbers
     cdef int M = 0            # no of successful events
     cdef int six, r
@@ -42,4 +42,20 @@ def dice62(int N, int ndice, int nsix):
     p = float(M)/N
     return p
 
+from libc.stdlib cimport rand, RAND_MAX
+def dice6_cy3(int N, int ndice, int nsix):
+    cdef int M = 0            # no of successful events
+    cdef int six, r
+    cdef double p
+    for i in range(N):
+        six = 0               # how many dice with six eyes?
+        for j in range(ndice):
+            # Roll die no. j
+            r = 1 + int(rand()/(RAND_MAX*6.0))
+            if r == 6:
+               six += 1
+        if six >= nsix:       # successful event?
+            M += 1
+    p = float(M)/N
+    return p
 
