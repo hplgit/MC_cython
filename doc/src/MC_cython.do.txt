@@ -45,7 +45,7 @@ especially if accurate results are desired.
 A short, intuitive algorithm in Python is first developed.
 Then this code is vectorized using functionality of the Numerical
 Python package. Later sections migrate the algorithm to Cython
-code and aslo plain C code for comparison. At the end the various
+code and also plain C code for comparison. At the end the various
 techniques are ranked according to their computational efficiency.
 
 ===== The Computational Problem =====
@@ -133,7 +133,7 @@ computing resources as the CPU time scales linearly with $N$.
 
 A vectorized version of the previous program consists of replacing the
 explicit loops in Python by efficient operations on vectors or arrays,
-using functionality in the Numerical Python (``numpy`) package.
+using functionality in the Numerical Python (`numpy`) package.
 Each array operation takes place in C or Fortran and is hence
 much more efficient than the corresponding loop version in Python.
 
@@ -154,12 +154,12 @@ performed by
 import numpy as np
 eyes = np.random.random_integers(1, 6, size=(N, ndice))
 !ec
-Each row in the `eyes` array corresponds to one Monte Carlo experiement.
+Each row in the `eyes` array corresponds to one Monte Carlo experiment.
 
 The next step is to count the number of successes in each experiment.
 This counting should not make use of any loop.  Instead we can test
 `eyes == 6` to get a boolean array where an element `i,j` is `True` if
-throow (or die) number `j` in Monte Carlo experiment number `i` gave
+throw (or die) number `j` in Monte Carlo experiment number `i` gave
 six eyes.  Summing up the rows in this boolean array (`True` is interpreted
 as 1 and `False` as 0), we are
 interested in the rows where the sum is equal to or greater than
@@ -334,7 +334,7 @@ that the array has two dimensions (indices),
 (counting from the end),
 and `mode='c'` indicates contiguous storage of the array.
 We also insert a line `@cython.boundscheck(False)` at the line before
-the function to tell Cython to turn off the costly check that arrray
+the function to tell Cython to turn off the costly check that array
 indices stay within their bounds.
 With all this extra information, Cython can generate C code that
 works with `numpy` arrays as efficiently as native C arrays.
@@ -513,7 +513,7 @@ from through the GitHub project "MC_cython": "https://github.com/hplgit/MC_cytho
 A file `make.sh` performs all the compilations, while `compare.py`
 runs all methods and prints out the CPU time required by each method,
 normalized by the fastest approach. The results for $N=450,000$
-are listed below (MacBook Air 11''
+are listed below (MacBook Air
 running Ubuntu in a VMWare Fusion virtual machine).
 
 |----------------c--------------|---c----|
@@ -532,21 +532,17 @@ running Ubuntu in a VMWare Fusion virtual machine).
 
 The CPU time of the plain Python version was 10 s, which is reasonably
 fast for obtaining a fairly accurate result in this problem.  The
-lesson learned is therefore that a Monte Carlo can be implemented in
-plain Python first. If more speed is needed, one can just add type
-information and create a Cython code. Studying the HTML file with what
-Cython manages to translate to C may give hints about how successful the
-Cython code is and point to optimizations,
-like avoiding the call to `random.randint` in the present
-case. Optimal Cython code runs here at approximately the same speed as
-calling a handwritten C function with the time-consuming loops.
-A major difference, though, is that the
-best Cython code requires drawing all the random numbers at once,
-which implies very much larger memory demands for large $N$ compared
-with the handwritten C versions.  It is also to be noticed that the
-stand-alone C program here ran faster than calling C from Python,
-probably because the amount of calculations is not large enough to make
-the overhead of calling C negligible.
+lesson learned is therefore that a Monte Carlo simulation can be
+implemented in plain Python first. If more speed is needed, one can
+just add type information and create a Cython code. Studying the HTML
+file with what Cython manages to translate to C may give hints about
+how successful the Cython code is and point to optimizations, like
+avoiding the call to `random.randint` in the present case. Optimal
+Cython code runs here at approximately the same speed as calling a
+handwritten C function with the time-consuming loops.  It is
+to be noticed that the stand-alone C program here ran faster than
+calling C from Python, probably because the amount of calculations is
+not large enough to make the overhead of calling C negligible.
 
 Vectorized Python do give a great speed-up compared to plain
 loops in Python, if done correctly, but the efficiency is not on par

@@ -1,0 +1,5 @@
+TITLE: Speeding Up Python Implementations of Monte Carlo Simulation
+AUTHOR: Hans Petter Langtangen at Simula Research Laboratory and University of Oslo
+DATE: today
+
+# #include "MC_cython.do.txt"
