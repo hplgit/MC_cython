@@ -6,5 +6,5 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-doconce format latex MC_cython -DPRIMER_BOOK
+doconce format latex MC_cython -DPRIMER_BOOK -DHEADER
 doconce replace figs-MC_cython figs MC_cython.p.tex
