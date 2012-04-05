@@ -6,19 +6,19 @@ algorithms. However, the execution speed of the code is significantly
 lower than what can be obtained by programming in languages such as
 Fortran, C, or C++. These languages *compile* the program to
 machine language, which enables the computing resources to be utilized
-with maximum efficiency.  Frequently, and this includes almost all
+with very high efficiency.  Frequently, and this includes almost all
 examples in the present book, Python is fast enough. But in the cases
 where speed really matters, can we increase the efficiency without
 rewriting the whole program in Fortran, C, or C++? The answer is yes,
 which will be illustrated through a case study in the forthcoming text.
 
 Fortunately, Python was initially designed for being integrated with
-C. This feature has allowed development of several techniques and tools
-for calling compiled languages from Python, allowing us to relatively
-easily reuse fast and well-tested scientific libraries in Fortran, C,
-or C++ from Python, or migrate slow Python code to compiled
-languages. It often turns out that only smaller parts of the code,
-usually \emp{for} loops doing heavy numerical computations,
+C. This feature has spawned the development of several techniques and
+tools for calling compiled languages from Python, allowing us to
+relatively easily reuse fast and well-tested scientific libraries in
+Fortran, C, or C++ from Python, *or* migrate slow Python code to
+compiled languages. It often turns out that only smaller parts of the
+code, usually \emp{for} loops doing heavy numerical computations,
 suffer from low speed and can benefit from being implemented in
 Fortran, C, or C++.
 
@@ -73,7 +73,7 @@ tools are for Monte Carlo simulation. This will now be explored.
 
 ===== A Scalar Python Implementation ======
 
-Let us introduce the more descriptive variable `ndice` for $m$
+Let us introduce the more descriptive variables `ndice` for $m$
 and `nsix` for $n$. The Monte Carlo method is
 simply a loop, repeated `N` times, where the body of the loop may
 directly express the problem at hand. Here, we draw `ndice` random
@@ -86,11 +86,11 @@ A Python function implementing this approach may look as follows:
 @@@CODE src-MC_cython/dice6.py fromto: import random@def dice6_vec1
 
 The `float(M)` transformation is important since `M/N` will imply integer
-division when `M` and `N` both are integers in Python (v2.x) and many other
+division when `M` and `N` both are integers in Python v2.x and many other
 languages.
 
 We will refer to this implementation is the *plain Python* implementation.
-Timing the function can be done like this:
+Timing the function can be done by:
 !bc pycod
 import time
 t0 = time.clock()
@@ -99,7 +99,7 @@ t1 = time.clock()
 print 'CPU time for loops in Python:', t1-t0
 !ec
 The table to appear later shows the performance of this plain, pure Python
-code relative to other approaches. There is a factor of 50+ to be
+code relative to other approaches. There is a factor of 30+ to be
 gained in computational efficiency by reading on.
 
 The function above can be verified by studying the (somewhat
@@ -112,7 +112,7 @@ $n=4$ and $N=10^5$ the average probability in 25 full Monte Carlo
 experiments is 0.00078 while the exact answer is 0.00077. With
 $N=10^6$ we get the two correct significant digits from the Monte
 Carlo simulation, but the extra digit costs a factor of 10 in
-computing resources as the CPU time scales linearly with $N$.
+computing resources since the CPU time scales linearly with $N$.
 
 
 #3 dice, N=10^3, mean=0.00376, stdev=1.82e-03, exact=0.00463, time=0.0 s
@@ -146,7 +146,7 @@ no looping in Python is needed. The solution algorithm must therefore
 be expressed through a series of function calls to the `numpy` library.
 Vectorization requires knowledge of the library's functionality and
 how to assemble the relevant building blocks to an algorithm without
-Python loops.
+operations on individual array elements.
 
 Generation of `ndice` random number of eyes for `N` experiments is
 performed by
@@ -181,9 +181,9 @@ complicated. We have to decode the calls to various
 `numpy` functionality to actually realize that `dice6_py`
 and `dice6_vec` correspond to the same mathematics.
 
-Here is another possible vectorized algorithm, which is perhaps easier
-to understand, because we retain the Monte Carlo loop and vectorize
-only each individual experiment:
+Here is another possible vectorized algorithm, which is easier to
+understand, because we retain the Monte Carlo loop and vectorize only
+each individual experiment:
 
 @@@CODE src-MC_cython/dice6.py fromto: def dice6_vec2@def experiment
 
@@ -198,23 +198,21 @@ straightforward scalar code.
 
 ===== A Plain Cython Implementation ======
 
-A Cython program starts with the scalar (also known as the pure or
-non-vectorized) Python implementation, but all variables are specified
-with their types, using Cython's variable declaration syntax `cdef int M = 0`
-where we in standard Python just write `M = 0`.
-Adding such variable declarations in the scalar Python
-implementation is straightforward:
+A Cython program starts with the scalar Python implementation, but all
+variables are specified with their types, using Cython's variable
+declaration syntax, like `cdef int M = 0` where we in standard Python
+just write `M = 0`.  Adding such variable declarations in the scalar
+Python implementation is straightforward:
 
 @@@CODE src-MC_cython/dice6.pyx fromto: import random@import  numpy
 
-This code must be put in a separate file with extension `.pyx`
-and run by Cython, which translates the Cython code to C. The
-the C code must be
-compiled and linked to form a shared library, which can be imported
-in Python as a module (known as a (C) extension module).
-All these tasks are normally automated by a `setup.py` script.
-Let the `dice6_cy1` function above be stored in a file `dice6.pyx`.
-A proper `setup.py` script looks as follows:
+This code must be put in a separate file with extension `.pyx`.
+Running Cython on this file translates the Cython code to C.
+Thereafter, the the C code must be compiled and linked to form a
+shared library, which can be imported in Python as a module.  All
+these tasks are normally automated by a `setup.py` script.  Let the
+`dice6_cy1` function above be stored in a file `dice6.pyx`.  A proper
+`setup.py` script looks as follows:
 
 @@@CODE src-MC_cython/setup_cy.py
 
@@ -236,9 +234,10 @@ print t1 - t0
 We refer to this implementation as *Cython random.randint*.
 Although most of the statements in the `dice6_cy1` function
 are turned into plain and fast C code,
-the speed is not impressive compared with plain Python.
+the speed is not much improved compared with the original scalar
+Python code.
 
-To investigate what takes time in this Cython implementation, we should perform
+To investigate what takes time in this Cython implementation, we can perform
 a profiling. The template for profiling a Python function whose
 call syntax is stored in some string `statement`, reads
 !bc pycod
@@ -352,7 +351,7 @@ This Cython implementation is named *Cython numpy.random*.
 
 The disadvantage with the `dice6_cy2` function is that large simulations
 (large `N`) also require large amounts of memory, which usually limits
-the possibility for high accuracy much more than CPU time. It would
+the possibility for high accuracy much more than the CPU time. It would
 be advantageous to have a fast random number generator a la
 `random.randint` in C. The C library `stdlib` has a generator of
 random integers, `rand()`, generating numbers from 0 to up `RAND_MAX`.
@@ -363,7 +362,7 @@ from libc.stdlib cimport rand, RAND_MAX
 
 r = 1 + int(rand()/(RAND_MAX*6.0)) # random integer 1,...,6
 !ec
-Note that `rand()` returns and integer so we must avoid integer
+Note that `rand()` returns an integer so we must avoid integer
 division by ensuring that the denominator is a real number. We also
 need to explicitly convert the resulting real fraction to `int`
 since `r` is declared as `int`.
@@ -413,7 +412,7 @@ function to call in terms of a Fortran 90 module. Such a module can
 be written by hand, but `f2py` can also generate it. To this end,
 we make a Fortran file `dice6_c_signature.f`
 with the signature of the C function written
-in Fortran syntax with some annotations:
+in Fortran 77 syntax with some annotations:
 
 @@@CODE src-MC_cython/dice6_c_signature.f
 
@@ -422,7 +421,7 @@ Fortran variables are to be treated as plain C variables and
 not as pointers (which is the default interpretation of variables
 in Fortran). The `C2fpy` are special comment lines that `f2py`
 recognizes, and these lines are used to provide extra information
-to `f2py` which have no meaning in plain Fortran.
+to `f2py` which have no meaning in plain Fortran 77.
 
 We must run `f2py` to generate a `.pyf` file with a Fortran 90
 module specification of the C function to call:
@@ -432,7 +431,9 @@ Terminal> f2py -m _dice6_c1 -h dice6_c.pyf \
 !ec
 Here `_dice6_c1` is the name of the module with the C function
 that is to be imported in Python, and `dice6_c.pyf` is the
-name of the Fortran 90 module file to be generated.
+name of the Fortran 90 module file to be generated. Programmers
+who know Fortran 90 may want to write the `dice6_c.pyf` file
+by hand.
 
 The next step is to use the information in `dice6_c.pyf`
 to generate a (C extension) module `_dice6_c1`. Fortunately,
@@ -456,7 +457,7 @@ Required arguments:
   nsix : input int
 Return objects:
   dice6 : float
->>> _dice6_c1.dice6(1000, 4, 2)
+>>> _dice6_c1.dice6(N=1000, ndice=4, nsix=2)
 0.145
 !ec
 The method of calling the C function `dice6` via an `f2py`
