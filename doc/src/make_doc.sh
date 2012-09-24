@@ -17,6 +17,6 @@ if [ $? -ne 0 ]; then
 fi
 rm -rf sphinx-rootdir
 doconce sphinx_dir author="Hans Petter Langtangen" title="Speeding Up Python Implementations of Monte Carlo Simulation" MC_Cython.do.txt
-python automake-sphinx.py
+python automake_sphinx.py
 
 

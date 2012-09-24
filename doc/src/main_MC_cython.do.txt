@@ -1,4 +1,4 @@
-TITLE: Speeding Up Python Implementations of Monte Carlo Simulation
+TITLE: Monte Carlo Simulation with Cython
 AUTHOR: Hans Petter Langtangen at Simula Research Laboratory and University of Oslo
 DATE: today
 

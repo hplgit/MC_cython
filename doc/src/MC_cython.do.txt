@@ -1,4 +1,7 @@
-# #ifdef HEADER
+# #ifdef PRIMER_BOOK
+
+# Intro aimed at an appendix in the book
+# A Primer on Scientific Programming with Python.
 
 Python is a very convenient language for implementing scientific
 computations as the code can be made very close to the mathematical
@@ -29,16 +32,24 @@ able to automatically generate special-purpose, fast C code from the
 Python code. We will show how to utilize Cython and what the
 computational gain might be.
 
-# #else
-
-========= Using Cython for Monte Carlo Simulation =========
-
-# #endif
-
 The present case study starts with stating a computational
 problem involving statistical simulations, which are known
 to cause long execution times,
 especially if accurate results are desired.
+
+# #else
+
+Monte Carlo simulations are usually known to require long execution
+times. Implementing such simulations in pure Python may lead to
+inefficient code.  The purpose of this note is to show how Python
+implementations of Monte Carlo simulations, can be made much more
+efficient by porting the code to Cython. Pure C implementations are
+included for comparison of efficiency. The reader should know about
+basic Python and perhaps a bit about Monte Carlo simulations.  Cython
+will be introduced in a step-by-step fashion
+
+# #endif
+
 
 ======= Pure Python Code for Monte Carlo Simulation =======
 
@@ -71,7 +82,7 @@ question is how useful high-level languages like Python and associated
 tools are for Monte Carlo simulation. This will now be explored.
 
 
-===== A Scalar Python Implementation ======
+===== A Scalar Python Implementation =====
 
 Let us introduce the more descriptive variables `ndice` for $m$
 and `nsix` for $n$. The Monte Carlo method is
@@ -129,7 +140,7 @@ computing resources since the CPU time scales linearly with $N$.
 #5 dice, N=10^6, mean=0.00013, stdev=9.85e-06, exact=0.00013, time=12.8 s
 
 
-===== A Vectorized Python Implementation ======
+===== A Vectorized Python Implementation =====
 
 A vectorized version of the previous program consists of replacing the
 explicit loops in Python by efficient operations on vectors or arrays,
@@ -196,7 +207,7 @@ straightforward scalar code.
 
 ======= Migrating Scalar Python Code to Cython =======
 
-===== A Plain Cython Implementation ======
+===== A Plain Cython Implementation =====
 
 A Cython program starts with the scalar Python implementation, but all
 variables are specified with their types, using Cython's variable
@@ -208,7 +219,7 @@ Python implementation is straightforward:
 
 This code must be put in a separate file with extension `.pyx`.
 Running Cython on this file translates the Cython code to C.
-Thereafter, the the C code must be compiled and linked to form a
+Thereafter, the C code must be compiled and linked to form a
 shared library, which can be imported in Python as a module.  All
 these tasks are normally automated by a `setup.py` script.  Let the
 `dice6_cy1` function above be stored in a file `dice6.pyx`.  A proper
@@ -285,7 +296,7 @@ Terminal> cython -a dice6.pyx
 creates a file `dice6.html` which can be loaded into a web browser
 to inspect what Cython has done with the Python code.
 
-FIGURE:[figs-MC_cython/dice6_html.png, width=550]
+FIGURE:[fig-MC_cython/dice6_html.png, width=550]
 
 White lines indicate that the Python code is translated into C code, while
 the yellow lines indicate that the generated C code must make calls
@@ -293,7 +304,7 @@ back to Python (using the Python C API, which implies overhead). Here,
 the `random.randint` call is in yellow, so this call is
 not translated to efficient C code.
 
-===== A Better Cython Implementation ======
+===== A Better Cython Implementation =====
 
 To speed up the previous Cython code, we have to get rid of the
 `random.randint` call every time we need a random variable.  Either we
@@ -376,7 +387,7 @@ This final Cython implementation will be referred to as *Cython stdlib.rand*.
 
 ======= Migrating Code to C =======
 
-===== Writing a C Program ======
+===== Writing a C Program =====
 
 A natural next improvement would be to program the Monte Carlo
 simulation loops directly in a compiled programming language, which
@@ -395,7 +406,7 @@ Terminal> ./dice6.capp 1000000
 !ec
 This solution is later referred to as *C program*.
 
-===== Migrating Loops to C Code via F2PY ======
+===== Migrating Loops to C Code via F2PY =====
 
 Instead of programming the whole application in C, we may consider
 migrating the loops to the C function `dice6` shown above and then
@@ -463,7 +474,7 @@ Return objects:
 The method of calling the C function `dice6` via an `f2py`
 generated module is referred to as *C via f2py*.
 
-===== Migrating Loops to C Code via Cython ======
+===== Migrating Loops to C Code via Cython =====
 
 The Cython tool can also be used to call C code, not only generating
 C code from the Cython language.
@@ -501,7 +512,7 @@ be loaded into Python as a module:
 We see that the module contains the function `dice6_cwrap`, which
 was made to call the underlying C function `dice6`.
 
-===== Comparing Efficiency ======
+===== Comparing Efficiency =====
 
 All the files corresponding to the various techniques described above
 are available
@@ -509,7 +520,7 @@ are available
 in the directory `src/cython`.
 # #else
 as a "tarball": "_static/MC_cython.tar.gz" or accessible
-from through the GitHub project "MC_cython": "https://github.com/hplgit/MC_cython".
+from through the GitHub project "`MC_cython`": "https://github.com/hplgit/MC_cython".
 # #endif
 A file `make.sh` performs all the compilations, while `compare.py`
 runs all methods and prints out the CPU time required by each method,
