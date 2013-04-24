@@ -318,11 +318,13 @@ random numbers we need at once:
 import  numpy as np
 cimport numpy as np
 
-cdef np.ndarray[np.int_t,
-                ndim=2,
-                negative_indices=False,
-                mode='c'] eyes = \
-                np.random.random_integers(1, 6, (N, ndice))
+@cython.boundscheck(False)  # turn off array bounds check
+@cython.wraparound(False)   # turn off negative indices ([-1,-1])
+def dice6_cy2(int N, int ndice, int nsix):
+    # Use numpy to generate all random numbers
+    ...
+    cdef np.ndarray[np.int_t, ndim=2, mode='c'] eyes = \
+         np.random.random_integers(1, 6, (N, ndice))
 !ec
 This code needs some explanation. The `cimport` statement imports
 a special version of `numpy` for Cython and is needed *after* the
@@ -333,22 +335,23 @@ cdef np.ndarray eyes = np.random.random_integers(1, 6, (N, ndice))
 !ec
 However, the processing of the `eyes` array will then be slow because
 Cython does not have enough information about the array. To generate
-optimal C code, we must provide information on the element types
-in the array, the number of dimensions of the array, that the array
-is stored in contiguous memory, and that we do not need negative
-indices (which slows down array indexing). All this information
-is inserted in square brackets: `np.int_t` denotes integer array
-elements (`np.int` is the usual data type object, but `np.int_t` is
-a Cython precompiled version of this object), `ndim=2` tells
-that the array has two dimensions (indices),
-`negative_indices=False` turns off the possibility for negative indices
-(counting from the end),
-and `mode='c'` indicates contiguous storage of the array.
-We also insert a line `@cython.boundscheck(False)` at the line before
-the function to tell Cython to turn off the costly check that array
-indices stay within their bounds.
-With all this extra information, Cython can generate C code that
-works with `numpy` arrays as efficiently as native C arrays.
+optimal C code, we must provide information on the element types in
+the array, the number of dimensions of the array, that the array is
+stored in contiguous memory, that we do not want the overhead of
+checking whether indices are within their bounds or not, and that we
+do not need negative indices (which slows down array indexing).  The
+latter two properties are taken care of by the
+`@cython.boundscheck(False)` and the `@cython.wraparound(False)`
+statements (decorators) right before the function,
+respectively, while the rest of
+the information is specified within square brackets in the `cdef
+np.ndarray` declaration. Inside the brackets, `np.int_t` denotes
+integer array elements (`np.int` is the usual data type object, but
+`np.int_t` is a Cython precompiled version of this object), `ndim=2`
+tells that the array has two dimensions (indices),
+and `mode='c'` indicates contiguous
+storage of the array.  With all this extra information, Cython can generate C
+code that works with `numpy` arrays as efficiently as native C arrays.
 
 The rest of the code is a plain copy of the `dice6_py` function, but
 with the `random.randint` call replaced by an array look-up

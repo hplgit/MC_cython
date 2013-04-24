@@ -19,17 +19,15 @@ def dice6_cy1(int N, int ndice, int nsix):
 import  numpy as np
 cimport numpy as np
 import cython
-@cython.boundscheck(False)
+@cython.boundscheck(False)  # turn off array bounds check
+@cython.wraparound(False)   # turn off negative indices ([-1,-1])
 def dice6_cy2(int N, int ndice, int nsix):
     # Use numpy to generate all random numbers
     cdef int M = 0            # no of successful events
     cdef int six, r
     cdef double p
-    cdef np.ndarray[np.int_t,
-                    ndim=2,
-                    negative_indices=False,
-                    mode='c'] eyes = \
-                    np.random.random_integers(1, 6, (N, ndice))
+    cdef np.ndarray[np.int_t, ndim=2, mode='c'] eyes = \
+         np.random.random_integers(1, 6, (N, ndice))
     for i in range(N):
         six = 0               # how many dice with six eyes?
         for j in range(ndice):
