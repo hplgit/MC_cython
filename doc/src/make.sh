@@ -19,7 +19,7 @@ makeindex $main
 pdflatex -shell-escape $main
 pdflatex -shell-escape $main
 
-doconce format html $main --html-solarized
+doconce format html $main --html-style=solarized
 cp $main.html ${main}-solarized.html
 doconce format html $main
 

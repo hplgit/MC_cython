@@ -253,11 +253,12 @@ a profiling. The template for profiling a Python function whose
 call syntax is stored in some string `statement`, reads
 !bc pycod
 import cProfile, pstats
-cProfile.runctx(statement, globals(), locals(), '.prof')
-s = pstats.Stats('.prof')
+cProfile.runctx(statement, globals(), locals(), 'tmp_profile.dat')
+s = pstats.Stats('tmp_profile.dat')
 s.strip_dirs().sort_stats('time').print_stats(30)
 !ec
-Here, we set
+Data from the profiling are here stored in the file `tmp_profile.dat`.
+Our interest now is the `dice6_cy1` function so we set
 !bc pycod
 statement = 'dice6_cy1(N, ndice, nsix)'
 !ec
