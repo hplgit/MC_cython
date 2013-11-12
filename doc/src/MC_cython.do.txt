@@ -375,7 +375,7 @@ access in a Cython program:
 !bc cycod
 from libc.stdlib cimport rand, RAND_MAX
 
-r = 1 + int(rand()/(RAND_MAX*6.0)) # random integer 1,...,6
+r = 1 + int(6.0*rand()/RAND_MAX) # random integer 1,...,6
 !ec
 Note that `rand()` returns an integer so we must avoid integer
 division by ensuring that the denominator is a real number. We also
