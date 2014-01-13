@@ -1,5 +1,5 @@
 TITLE: Monte Carlo Simulation with Cython
-AUTHOR: Hans Petter Langtangen at Simula Research Laboratory and University of Oslo
+AUTHOR: Hans Petter Langtangen at Simula Research Laboratory & University of Oslo
 DATE: today
 
 # #include "MC_cython.do.txt"
