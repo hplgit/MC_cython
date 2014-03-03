@@ -51,7 +51,7 @@ will be introduced in a step-by-step fashion
 # #endif
 
 
-======= Pure Python Code for Monte Carlo Simulation =======
+======= Pure Python code for Monte Carlo simulation =======
 
 A short, intuitive algorithm in Python is first developed.
 Then this code is vectorized using functionality of the Numerical
@@ -59,7 +59,7 @@ Python package. Later sections migrate the algorithm to Cython
 code and also plain C code for comparison. At the end the various
 techniques are ranked according to their computational efficiency.
 
-===== The Computational Problem =====
+===== The computational problem =====
 
 A die is thrown $m$ times.
 What is the probability of getting six eyes *at least* $n$ times?
@@ -82,7 +82,7 @@ question is how useful high-level languages like Python and associated
 tools are for Monte Carlo simulation. This will now be explored.
 
 
-===== A Scalar Python Implementation =====
+===== A scalar Python implementation =====
 
 Let us introduce the more descriptive variables `ndice` for $m$
 and `nsix` for $n$. The Monte Carlo method is
@@ -140,7 +140,7 @@ computing resources since the CPU time scales linearly with $N$.
 #5 dice, N=10^6, mean=0.00013, stdev=9.85e-06, exact=0.00013, time=12.8 s
 
 
-===== A Vectorized Python Implementation =====
+===== A vectorized Python implementation =====
 
 A vectorized version of the previous program consists of replacing the
 explicit loops in Python by efficient operations on vectors or arrays,
@@ -205,9 +205,9 @@ the *plain Python* implementation (!) and very much slower than the
 readable, partially vectorized code, may run slower than
 straightforward scalar code.
 
-======= Migrating Scalar Python Code to Cython =======
+======= Migrating scalar Python code to Cython =======
 
-===== A Plain Cython Implementation =====
+===== A plain Cython implementation =====
 
 A Cython program starts with the scalar Python implementation, but all
 variables are specified with their types, using Cython's variable
@@ -305,7 +305,7 @@ back to Python (using the Python C API, which implies overhead). Here,
 the `random.randint` call is in yellow, so this call is
 not translated to efficient C code.
 
-===== A Better Cython Implementation =====
+===== A better Cython implementation =====
 
 To speed up the previous Cython code, we have to get rid of the
 `random.randint` call every time we need a random variable.  Either we
@@ -389,9 +389,9 @@ demands and the somewhat complicated array declarations of the latter:
 @@@CODE src-MC_cython/dice6.pyx fromto: from libc@
 This final Cython implementation will be referred to as *Cython stdlib.rand*.
 
-======= Migrating Code to C =======
+======= Migrating code to C =======
 
-===== Writing a C Program =====
+===== Writing a C program =====
 
 A natural next improvement would be to program the Monte Carlo
 simulation loops directly in a compiled programming language, which
@@ -410,13 +410,13 @@ Terminal> ./dice6.capp 1000000
 !ec
 This solution is later referred to as *C program*.
 
-===== Migrating Loops to C Code via F2PY =====
+===== Migrating loops to C code via F2PY =====
 
 Instead of programming the whole application in C, we may consider
 migrating the loops to the C function `dice6` shown above and then
 have the rest of the program (essentially the calling main program) in
 Python. This is a convenient solution if we were to do many other,
-less CPU-time critical things for convenience in Python.
+less CPU time critical things for convenience in Python.
 
 There are many alternative techniques for calling C functions from
 Python. Here we shall explain two. The first applies the program
@@ -478,7 +478,7 @@ Return objects:
 The method of calling the C function `dice6` via an `f2py`
 generated module is referred to as *C via f2py*.
 
-===== Migrating Loops to C Code via Cython =====
+===== Migrating loops to C code via Cython =====
 
 The Cython tool can also be used to call C code, not only generating
 C code from the Cython language.
@@ -516,7 +516,7 @@ be loaded into Python as a module:
 We see that the module contains the function `dice6_cwrap`, which
 was made to call the underlying C function `dice6`.
 
-===== Comparing Efficiency =====
+===== Comparing efficiency =====
 
 All the files corresponding to the various techniques described above
 are available
