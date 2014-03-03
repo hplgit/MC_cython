@@ -534,7 +534,7 @@ running Ubuntu in a VMWare Fusion virtual machine).
 
 |----------------c--------------|---c----|
 |      Method                   | Timing |
-|----------------l--------------|---r----|
+|----------------l------------------r----|
 | C program                     |   1.0  |
 | Cython stdlib.rand            |   1.2  |
 | Cython numpy.random           |   1.2  |
