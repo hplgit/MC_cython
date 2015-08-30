@@ -9,7 +9,7 @@ if [ $? -ne 0 ]; then exit 1; fi
 main=main_MC_cython
 
 rm -rf sphinx-rootdir
-doconce sphinx_dir author="H. P. Langtangen" title="Speeding Up Python Implementations of Monte Carlo Simulation" version=0.9 theme=pyramid $main
+doconce sphinx_dir copyright="H. P. Langtangen" title="Speeding Up Python Implementations of Monte Carlo Simulation" version=0.9 theme=pyramid $main
 python automake_sphinx.py
 
 doconce format pdflatex $main
@@ -34,5 +34,3 @@ cp -r fig-MC_cython $dest
 cp -r ${main}-solarized.html $main.html $main.pdf sphinx-rootdir/_build/html $dest
 cd $dest
 mv html sphinx
-
-
