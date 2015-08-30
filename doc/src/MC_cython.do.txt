@@ -1,3 +1,5 @@
+label{ch:MC_Cython}
+
 # #ifdef PRIMER_BOOK
 label{ch:MC_Cython}
 
@@ -223,8 +225,9 @@ Running Cython on this file translates the Cython code to C.
 Thereafter, the C code must be compiled and linked to form a
 shared library, which can be imported in Python as a module.  All
 these tasks are normally automated by a `setup.py` script.  Let the
-`dice6_cy1` function above be stored in a file `dice6.pyx`.  A proper
-`setup.py` script looks as follows:
+`dice6_cy1` function above be stored in a file
+"`dice6.pyx`": "${src_path}/dice6.pyx".  A proper
+"`setup.py`": "${src_path}/setup_cy.py" script looks as follows:
 
 @@@CODE src-MC_cython/setup_cy.py
 
@@ -298,7 +301,7 @@ Terminal> cython -a dice6.pyx
 creates a file `dice6.html` which can be loaded into a web browser
 to inspect what Cython has done with the Python code.
 
-FIGURE:[fig-MC_cython/dice6_html.png, width=550]
+FIGURE:[fig-MC_cython/dice6_html, width=550]
 
 White lines indicate that the Python code is translated into C code, while
 the yellow lines indicate that the generated C code must make calls
@@ -426,7 +429,7 @@ The `f2py` program was actually made for gluing Python and Fortran,
 but it can work with C too. We need a specification of the C
 function to call in terms of a Fortran 90 module. Such a module can
 be written by hand, but `f2py` can also generate it. To this end,
-we make a Fortran file `dice6_c_signature.f`
+we make a Fortran file "`dice6_c_signature.f`": "${src_path}/dice6_signature.f"
 with the signature of the C function written
 in Fortran 77 syntax with some annotations:
 
@@ -454,12 +457,12 @@ by hand.
 The next step is to use the information in `dice6_c.pyf`
 to generate a (C extension) module `_dice6_c1`. Fortunately,
 `f2py` generates the necessary code, and compiles and links the relevant
-files, to form a shared library file `_dice6_c1.so`, by a short command:
+files to form a shared library file `_dice6_c1.so`:
 !bc sys
 Terminal> f2py -c dice6_c.pyf dice6_c.c
 !ec
 We can now test the module:
-!bc ipy
+!bc pyshell
 >>> import _dice6_c1
 >>> print dir(_dice6_c1)  # module contents
 ['__doc__', '__file__', '__name__', '__package__',
@@ -496,10 +499,11 @@ the C function:
 
 @@@CODE src-MC_cython/dice6_cwrap.pyx
 
-Cython must use this file, named `dice6_cwrap.pyx`,
-to generate C code, which is to be compiled and linked with
-the `dice6_c.c` code. All this is accomplished in a `setup.py`
-script:
+Cython must use this file, named "`dice6_cwrap.pyx`":
+"${src_path}/dice6_cwrap.pyx", to generate C code, which is to be
+compiled and linked with the "`dice6_c.c`": "${src_path}/dice6_c.c"
+code. All this is accomplished in a "`setup.py`":
+"${src_path}/setup_c.py" script:
 
 @@@CODE src-MC_cython/setup_c.py
 This `setup.py` script is run as
@@ -508,7 +512,7 @@ Terminal> python setup.py build_ext --inplace
 !ec
 resulting in a shared library file `_dice6_c2.so`, which can
 be loaded into Python as a module:
-!bc ipy
+!bc pyshell
 >>> import _dice6_c2
 >>> print dir(_dice6_c2)
 ['__builtins__', '__doc__', '__file__', '__name__',
@@ -527,11 +531,12 @@ in the directory `src/cython`.
 as a "tarball": "_static/MC_cython.tar.gz" or accessible
 from through the GitHub project "`MC_cython`": "https://github.com/hplgit/MC_cython".
 # #endif
-A file `make.sh` performs all the compilations, while `compare.py`
+A file "`make.sh`": "${src_path}/make.sh"
+performs all the compilations, while "`compare.py`": "${src_path}/compare.py"
 runs all methods and prints out the CPU time required by each method,
 normalized by the fastest approach. The results for $N=450,000$
-are listed below (MacBook Air
-running Ubuntu in a VMWare Fusion virtual machine).
+are listed below.
+#(MacBook Air running Ubuntu 12.04 in a VMWare Fusion virtual machine).
 
 |----------------c------------------c----|
 |      Method                   | Timing |

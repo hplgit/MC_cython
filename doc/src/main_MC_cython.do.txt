@@ -2,4 +2,9 @@ TITLE: Monte Carlo Simulation with Cython
 AUTHOR: Hans Petter Langtangen at Simula Research Laboratory & University of Oslo
 DATE: today
 
+<%
+#src_path = 'https://github.com/hplgit/MC_cython/tree/master/doc/src/src-MC_cython'
+src_path = 'http://tinyurl.com/qbvomqw'
+%>
+
 # #include "MC_cython.do.txt"
